@@ -33,8 +33,6 @@ public class LoginActivity extends AppCompatActivity implements
     // Should we automatically resolve ConnectionResults when possible?
     private boolean mShouldResolve = false;
 
-    private ConnectionResult mConnectionResult;
-
     @Override
     public void onConnected(Bundle bundle) {
         // onConnected indicates that an account was selected on the device, that the selected
@@ -43,12 +41,16 @@ public class LoginActivity extends AppCompatActivity implements
         Log.d(TAG, "onConnected:" + bundle);
         mShouldResolve = false;
 
-        Intent intent = new Intent();
-        intent.setClass(this.getApplicationContext(), MainPage.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
 
         // Show the signed-in UI
         //showSignedInUI();
+    }
+
+    private void showErrorDialog(ConnectionResult connectionResult)
+    {
+        //
     }
 
 
@@ -72,7 +74,7 @@ public class LoginActivity extends AppCompatActivity implements
             } else {
                 // Could not resolve the connection result, show the user an
                 // error dialog.
-                //showErrorDialog(connectionResult);
+                showErrorDialog(connectionResult);
             }
         } else {
             // Show the signed-out UI
@@ -148,6 +150,7 @@ public class LoginActivity extends AppCompatActivity implements
                 .addOnConnectionFailedListener(this)
                 .addApi(Plus.API)
                 .addScope(Plus.SCOPE_PLUS_LOGIN)
+                .addScope(Plus.SCOPE_PLUS_PROFILE)
                 .build();
 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
