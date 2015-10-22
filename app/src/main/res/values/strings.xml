@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">BarTab</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_main_page">MainPage</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="service_not_available">Google Location Services is not available.</string>
+    <string name="invalid_lat_long_used">An invalid latitude or longitude has been entered.</string>
+    <string name="no_address_found">No address was found for the latitude and longitude.</string>
+    <string name="address_found">An address has been found.</string>
+    <string name="no_geocoder_found">No geocoder has been initialized.</string>
 </resources>
