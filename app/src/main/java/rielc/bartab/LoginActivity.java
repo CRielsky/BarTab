@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
@@ -49,8 +50,14 @@ public class LoginActivity extends AppCompatActivity implements
                 .addScope(Plus.SCOPE_PLUS_PROFILE)
                 .build();
 
-        findViewById(R.id.sign_in_button).setOnClickListener(this);
-        findViewById(R.id.bypass).setOnClickListener(this);
+        Button sign_in = (Button)findViewById(R.id.sign_in_button);
+        sign_in.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+               onSignInClicked();
+            }
+        });
 
         /*
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -149,6 +156,7 @@ public class LoginActivity extends AppCompatActivity implements
     @Override
     public void onClick(View v)
     {
+        /*
         //Case statement to handle any and all button presses
         switch (v.getId())
         {
@@ -156,6 +164,7 @@ public class LoginActivity extends AppCompatActivity implements
             case R.id.bypass: Intent intent = new Intent(this, HomeActivity.class);
                 startActivity(intent);
         }
+        */
 
     }
 
