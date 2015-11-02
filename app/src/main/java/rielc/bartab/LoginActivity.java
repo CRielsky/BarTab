@@ -33,6 +33,54 @@ public class LoginActivity extends AppCompatActivity implements
     // Should we automatically resolve ConnectionResults when possible?
     private boolean mShouldResolve = false;
 
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        //Build GoogleApiClient with access to basic profile
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Plus.API)
+                .addScope(Plus.SCOPE_PLUS_LOGIN)
+                .addScope(Plus.SCOPE_PLUS_PROFILE)
+                .build();
+
+        findViewById(R.id.sign_in_button).setOnClickListener(this);
+        findViewById(R.id.bypass).setOnClickListener(this);
+
+        /*
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+        */
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        mGoogleApiClient.disconnect();
+    }
+
+
     @Override
     public void onConnected(Bundle bundle) {
         // onConnected indicates that an account was selected on the device, that the selected
@@ -43,14 +91,6 @@ public class LoginActivity extends AppCompatActivity implements
 
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
-
-        // Show the signed-in UI
-        //showSignedInUI();
-    }
-
-    private void showErrorDialog(ConnectionResult connectionResult)
-    {
-        //
     }
 
 
@@ -109,10 +149,14 @@ public class LoginActivity extends AppCompatActivity implements
     @Override
     public void onClick(View v)
     {
-        if(v.getId() == R.id.sign_in_button)
+        //Case statement to handle any and all button presses
+        switch (v.getId())
         {
-            onSignInClicked();
+            case R.id.sign_in_button: onSignInClicked();
+            case R.id.bypass: Intent intent = new Intent(this, HomeActivity.class);
+                startActivity(intent);
         }
+
     }
 
     private void onSignInClicked()
@@ -124,49 +168,9 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
 
-    @Override
-    protected void onStart()
+    private void showErrorDialog(ConnectionResult connectionResult)
     {
-        super.onStart();
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    protected void onStop()
-    {
-        super.onStop();
-        mGoogleApiClient.disconnect();
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        //Build GoogleApiClient with access to basic profile
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Plus.API)
-                .addScope(Plus.SCOPE_PLUS_LOGIN)
-                .addScope(Plus.SCOPE_PLUS_PROFILE)
-                .build();
-
-        findViewById(R.id.sign_in_button).setOnClickListener(this);
-
-        /*
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        */
+        //TODO: Show error dialog to show users the connection error
     }
 
     @Override

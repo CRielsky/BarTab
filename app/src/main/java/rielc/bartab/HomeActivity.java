@@ -66,6 +66,9 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.C
         Button sign_out = (Button)findViewById(R.id.sign_out_button);
 
         //builds GoogleApiClient and attempts to connect
+
+
+
         find_me.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
@@ -98,6 +101,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.C
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         */
     }
+
 
     @Override
     public void onConnected(Bundle connectionHint)
