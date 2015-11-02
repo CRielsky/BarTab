@@ -25,11 +25,14 @@ import com.google.android.gms.location.LocationServices;
 public class HomeActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener{
 
-    private GoogleApiClient mGoogleApiClient;
-    TextView mLatitudeText, mLongtitudeText, mAddress;
-    protected Location mLastLocation;
-    private AddressResultReceiver mResultReceiver;
+    TextView mLatitudeText, mLongitudeText, mAddress;
     Boolean mAddressRequested = true;
+    int search_code;
+
+    protected Location mLastLocation;
+
+    private GoogleApiClient mGoogleApiClient;
+    private AddressResultReceiver mResultReceiver;
 
     //Handles the results returned by the service
     class AddressResultReceiver extends ResultReceiver{
@@ -58,17 +61,18 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.C
         setContentView(R.layout.activity_home);
 
         mLatitudeText = (TextView)findViewById(R.id.latit);
-        mLongtitudeText = (TextView)findViewById(R.id.longit);
+        mLongitudeText = (TextView)findViewById(R.id.longit);
         mAddress = (TextView)findViewById(R.id.addr);
 
         //Listens for user to click "Find Me!" button
         Button find_me = (Button)findViewById(R.id.find_me_button);
         Button sign_out = (Button)findViewById(R.id.sign_out_button);
+        Button search_dist = (Button)findViewById(R.id.search_dist);
+        Button search_rate = (Button)findViewById(R.id.search_rate);
+        Button search_wt = (Button)findViewById(R.id.search_wt);
+
 
         //builds GoogleApiClient and attempts to connect
-
-
-
         find_me.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
@@ -79,11 +83,60 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.C
 
         //Returns user to Login screen
         //TODO: Actually log the user out of Google+, not just exit the app
-        find_me.setOnClickListener(new View.OnClickListener() {
+        sign_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
                 finish();
+            }
+        });
+
+        search_dist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                if( !mLatitudeText.getText().equals("Latitude") && !mLongitudeText.getText().equals("Longitude") )
+                {
+                    search_code = 0;
+                    runSearchIntent(search_code);
+
+                }
+                else
+                {
+                    //wait for the last location
+                }
+            }
+        });
+
+        search_rate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                if( !mLatitudeText.getText().equals("Latitude") && !mLongitudeText.getText().equals("Longitude") )
+                {
+                    search_code = 1;
+                    runSearchIntent(search_code);
+                }
+                else
+                {
+                    //wait for the last location
+                }
+            }
+        });
+
+        search_wt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                if( !mLatitudeText.getText().equals("Latitude") && !mLongitudeText.getText().equals("Longitude") )
+                {
+                    search_code = 2;
+                    runSearchIntent(search_code);
+                }
+                else
+                {
+                    //wait for the last location
+                }
             }
         });
 
@@ -102,6 +155,15 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.C
         */
     }
 
+    protected void runSearchIntent(int search_code)
+    {
+        Intent search_intent = new Intent(this, SearchActivity.class);
+        search_intent.putExtra("LATITUDE_LOCATION", mLatitudeText.getText());
+        search_intent.putExtra("LONGITUDE_LOCATION", mLongitudeText.getText());
+        search_intent.putExtra("SEARCH_TYPE", search_code);
+        startActivity(search_intent);
+    }
+
 
     @Override
     public void onConnected(Bundle connectionHint)
@@ -112,7 +174,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.C
         {
             //outputs Latitude and Longitude
             mLatitudeText.setText(String.valueOf(mLastLocation.getLatitude()));
-            mLongtitudeText.setText(String.valueOf(mLastLocation.getLongitude()));
+            mLongitudeText.setText(String.valueOf(mLastLocation.getLongitude()));
 
             if(!Geocoder.isPresent())
             {
