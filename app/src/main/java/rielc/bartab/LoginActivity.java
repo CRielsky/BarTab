@@ -50,6 +50,7 @@ public class LoginActivity extends AppCompatActivity implements
                 .addScope(Plus.SCOPE_PLUS_PROFILE)
                 .build();
 
+        //log in button
         Button sign_in = (Button)findViewById(R.id.sign_in_button);
         sign_in.setOnClickListener(new View.OnClickListener() {
             @Override
