@@ -8,4 +8,5 @@
     <string name="no_address_found">No address was found for the latitude and longitude.</string>
     <string name="address_found">An address has been found.</string>
     <string name="no_geocoder_found">No geocoder has been initialized.</string>
+    <string name="title_activity_search">SearchActivity</string>
 </resources>
