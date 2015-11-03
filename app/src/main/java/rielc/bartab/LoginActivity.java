@@ -15,9 +15,11 @@ import android.widget.Button;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
+import com.google.android.gms.plus.model.people.Person;
 
 //Conner's branch
 public class LoginActivity extends AppCompatActivity implements
@@ -51,7 +53,7 @@ public class LoginActivity extends AppCompatActivity implements
                 .build();
 
         //log in button
-        Button sign_in = (Button)findViewById(R.id.sign_in_button);
+        SignInButton sign_in = (SignInButton)findViewById(R.id.sign_in_button);
         sign_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
@@ -97,8 +99,16 @@ public class LoginActivity extends AppCompatActivity implements
         Log.d(TAG, "onConnected:" + bundle);
         mShouldResolve = false;
 
-        Intent intent = new Intent(this, HomeActivity.class);
-        startActivity(intent);
+        if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
+            Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
+            String personName = currentPerson.getDisplayName();
+            String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
+
+            Intent intent = new Intent(this, HomeActivity.class);
+            intent.putExtra("USER_NAME", personName);
+            intent.putExtra("USER_EMAIL", email);
+            startActivity(intent);
+        }
     }
 
 

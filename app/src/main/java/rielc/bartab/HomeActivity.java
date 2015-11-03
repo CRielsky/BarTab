@@ -26,6 +26,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.C
         GoogleApiClient.OnConnectionFailedListener{
 
     TextView mLatitudeText, mLongitudeText, mAddress;
+    double latit, longit;
     Boolean mAddressRequested = true;
     int search_code;
 
@@ -139,27 +140,13 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.C
                 }
             }
         });
-
-        /*
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        */
     }
 
     protected void runSearchIntent(int search_code)
     {
         Intent search_intent = new Intent(this, SearchActivity.class);
-        search_intent.putExtra("LATITUDE_LOCATION", mLatitudeText.getText());
-        search_intent.putExtra("LONGITUDE_LOCATION", mLongitudeText.getText());
+        search_intent.putExtra("LATITUDE_LOCATION", latit);
+        search_intent.putExtra("LONGITUDE_LOCATION", longit);
         search_intent.putExtra("SEARCH_TYPE", search_code);
         startActivity(search_intent);
     }
@@ -175,6 +162,8 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.C
             //outputs Latitude and Longitude
             mLatitudeText.setText(String.valueOf(mLastLocation.getLatitude()));
             mLongitudeText.setText(String.valueOf(mLastLocation.getLongitude()));
+            latit = mLastLocation.getLatitude();
+            longit = mLastLocation.getLongitude();
 
             if(!Geocoder.isPresent())
             {
