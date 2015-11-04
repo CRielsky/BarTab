@@ -6,8 +6,9 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
+        multiDexEnabled = true;
         applicationId "rielc.bartab"
-        minSdkVersion 9
+        minSdkVersion 11
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -29,5 +30,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-plus:8.1.0'
     compile 'com.google.android.gms:play-services-maps:8.1.0'
     compile 'com.google.android.gms:play-services-location:8.1.0'
+
 
 }

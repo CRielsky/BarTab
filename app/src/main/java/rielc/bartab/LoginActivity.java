@@ -15,9 +15,11 @@ import android.widget.Button;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
+import com.google.android.gms.plus.model.people.Person;
 
 //Conner's branch
 public class LoginActivity extends AppCompatActivity implements
@@ -39,7 +41,7 @@ public class LoginActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.content_main);
 
         //Build GoogleApiClient with access to basic profile
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -51,7 +53,7 @@ public class LoginActivity extends AppCompatActivity implements
                 .build();
 
         //log in button
-        Button sign_in = (Button)findViewById(R.id.sign_in_button);
+        SignInButton sign_in = (SignInButton)findViewById(R.id.sign_in_button);
         sign_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
@@ -60,18 +62,6 @@ public class LoginActivity extends AppCompatActivity implements
             }
         });
 
-        /*
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        */
     }
 
     @Override
@@ -97,8 +87,16 @@ public class LoginActivity extends AppCompatActivity implements
         Log.d(TAG, "onConnected:" + bundle);
         mShouldResolve = false;
 
-        Intent intent = new Intent(this, HomeActivity.class);
-        startActivity(intent);
+        if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
+            Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
+            String personName = currentPerson.getDisplayName();
+            String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
+
+            Intent intent = new Intent(this, HomeActivity.class);
+            intent.putExtra("USER_NAME", personName);
+            intent.putExtra("USER_EMAIL", email);
+            startActivity(intent);
+        }
     }
 
 
@@ -157,15 +155,6 @@ public class LoginActivity extends AppCompatActivity implements
     @Override
     public void onClick(View v)
     {
-        /*
-        //Case statement to handle any and all button presses
-        switch (v.getId())
-        {
-            case R.id.sign_in_button: onSignInClicked();
-            case R.id.bypass: Intent intent = new Intent(this, HomeActivity.class);
-                startActivity(intent);
-        }
-        */
 
     }
 
