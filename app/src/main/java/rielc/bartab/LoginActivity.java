@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.content_main);
 
         //Build GoogleApiClient with access to basic profile
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -62,18 +62,6 @@ public class LoginActivity extends AppCompatActivity implements
             }
         });
 
-        /*
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        */
     }
 
     @Override
@@ -167,15 +155,6 @@ public class LoginActivity extends AppCompatActivity implements
     @Override
     public void onClick(View v)
     {
-        /*
-        //Case statement to handle any and all button presses
-        switch (v.getId())
-        {
-            case R.id.sign_in_button: onSignInClicked();
-            case R.id.bypass: Intent intent = new Intent(this, HomeActivity.class);
-                startActivity(intent);
-        }
-        */
 
     }
 

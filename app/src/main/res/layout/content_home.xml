@@ -9,78 +9,32 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_home" tools:context="rielc.bartab.HomeActivity">
 
-    <Button android:text="Find Me!"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/find_me_button"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <Button android:text="Sign Out"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/sign_out_button"
-        android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/find_me_button"
-        android:layout_alignStart="@+id/find_me_button"
-        android:layout_marginBottom="57dp" />
-
-    <TextView android:id="@+id/latit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Latitude"
-        android:textSize="20dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView android:id="@+id/longit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Longitude"
-        android:textSize="20dp"
-        android:layout_below="@+id/latit"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:id="@+id/addr"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Address"
-        android:textSize="20dp"
-        android:layout_below="@+id/longit"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
     <Button
         android:text="Search By Distance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/search_dist"
-        android:layout_below="@+id/addr"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:textSize="25dp"
+        android:layout_above="@+id/search_rate"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:text="Search By Rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/search_rate"
-        android:layout_marginTop="80dp"
-        android:layout_below="@+id/search_dist"
-        android:layout_alignRight="@+id/search_wt"
-        android:layout_alignEnd="@+id/search_wt" />
+        android:textSize="25dp"
+        android:layout_above="@+id/search_wt"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:text="Search By Wait Time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/search_wt"
-        android:layout_below="@+id/search_rate"
-        android:layout_alignLeft="@+id/search_dist"
-        android:layout_alignStart="@+id/search_dist"
-        android:layout_marginTop="80dp" />
+        android:textSize="25dp"
+        android:layout_centerVertical="true"
+        android:layout_alignRight="@+id/search_dist"
+        android:layout_alignEnd="@+id/search_dist" />
 
 </RelativeLayout>

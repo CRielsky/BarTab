@@ -25,10 +25,11 @@ import com.google.android.gms.location.LocationServices;
 public class HomeActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener{
 
-    TextView mLatitudeText, mLongitudeText, mAddress;
-    double latit, longit;
-    Boolean mAddressRequested = true;
-    int search_code;
+    private TextView mAddress;
+    private double latit, longit;
+    private Boolean mAddressRequested = true;
+    private int search_code;
+    private boolean googleConnected = false;
 
     protected Location mLastLocation;
 
@@ -61,42 +62,26 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.C
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        mLatitudeText = (TextView)findViewById(R.id.latit);
-        mLongitudeText = (TextView)findViewById(R.id.longit);
-        mAddress = (TextView)findViewById(R.id.addr);
-
-        //Listens for user to click "Find Me!" button
-        Button find_me = (Button)findViewById(R.id.find_me_button);
-        Button sign_out = (Button)findViewById(R.id.sign_out_button);
+        //Establishes buttons for searches
         Button search_dist = (Button)findViewById(R.id.search_dist);
         Button search_rate = (Button)findViewById(R.id.search_rate);
         Button search_wt = (Button)findViewById(R.id.search_wt);
 
+        showToast("Getting your location...");
+        //Try to connect to Google API
+        buildGoogleApiClient();
 
-        //builds GoogleApiClient and attempts to connect
-        find_me.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                buildGoogleApiClient();
-            }
-        });
+        //Set buttons to visible once Google has connected and location has been found
+        search_dist.setVisibility(View.VISIBLE);
+        search_rate.setVisibility(View.VISIBLE);
+        search_wt.setVisibility(View.VISIBLE);
 
-        //Returns user to Login screen
-        //TODO: Actually log the user out of Google+, not just exit the app
-        sign_out.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                finish();
-            }
-        });
-
+        //Wait for buttons to be clicked to initialize search
         search_dist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
-                if( !mLatitudeText.getText().equals("Latitude") && !mLongitudeText.getText().equals("Longitude") )
+                if( latit != 0.0d && longit != 0.0d )
                 {
                     search_code = 0;
                     runSearchIntent(search_code);
@@ -104,7 +89,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.C
                 }
                 else
                 {
-                    //wait for the last location
+                    showToast("Waiting to get your location...");
                 }
             }
         });
@@ -113,14 +98,14 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.C
             @Override
             public void onClick(View v)
             {
-                if( !mLatitudeText.getText().equals("Latitude") && !mLongitudeText.getText().equals("Longitude") )
+                if( latit != 0.0d && longit != 0.0d )
                 {
                     search_code = 1;
                     runSearchIntent(search_code);
                 }
                 else
                 {
-                    //wait for the last location
+                    showToast("Waiting to get your location...");
                 }
             }
         });
@@ -129,14 +114,14 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.C
             @Override
             public void onClick(View v)
             {
-                if( !mLatitudeText.getText().equals("Latitude") && !mLongitudeText.getText().equals("Longitude") )
+                if( latit != 0.0d && longit != 0.0d )
                 {
                     search_code = 2;
                     runSearchIntent(search_code);
                 }
                 else
                 {
-                    //wait for the last location
+                    showToast("Waiting to get your location...");
                 }
             }
         });
@@ -156,15 +141,15 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.C
     public void onConnected(Bundle connectionHint)
     {
         //Gets last location using Latitude and Longitude
+        googleConnected = true;
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if(mLastLocation != null)
         {
-            //outputs Latitude and Longitude
-            mLatitudeText.setText(String.valueOf(mLastLocation.getLatitude()));
-            mLongitudeText.setText(String.valueOf(mLastLocation.getLongitude()));
             latit = mLastLocation.getLatitude();
             longit = mLastLocation.getLongitude();
 
+
+            /*
             if(!Geocoder.isPresent())
             {
                 showToast(getString(R.string.no_geocoder_found));
@@ -175,6 +160,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.C
             {
                 startIntentService();
             }
+            */
         }
 
 
@@ -221,27 +207,6 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.C
     {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
-
-
-    /*
-    Function make sure GoogleApiClient is connected and will then start the service
-    to find the user's location
-
-    public void fetchAddressButtonHandler(View view) {
-        // Only start the service to fetch the address if GoogleApiClient is
-        // connected.
-        if (mGoogleApiClient.isConnected() && mLastLocation != null) {
-            startIntentService();
-        }
-        // If GoogleApiClient isn't connected, process the user's request by
-        // setting mAddressRequested to true. Later, when GoogleApiClient connects,
-        // launch the service to fetch the address. As far as the user is
-        // concerned, pressing the Fetch Address button
-        // immediately kicks off the process of getting the address.
-        mAddressRequested = true;
-        updateUIWidgets();
-    }
-    */
 
 }
 

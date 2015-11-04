@@ -9,8 +9,11 @@ package rielc.bartab;
  */
 public final class Constants
 {
+    public static final double METERS_TO_MILES = 0.000621371;
+
     public static final int SUCCESS_RESULT = 0;
     public static final int FAILURE_RESULT = 1;
+
     public static final String PACKAGE_NAME =
             "rielc.bartab";
     public static final String RECEIVER = PACKAGE_NAME + ".RECEIVER";
@@ -18,4 +21,5 @@ public final class Constants
             ".RESULT_DATA_KEY";
     public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME +
             ".LOCATION_DATA_EXTRA";
+    public static final String DATABASE_URL = "http://74.67.2.186:3000/api/Reviews";
 }
