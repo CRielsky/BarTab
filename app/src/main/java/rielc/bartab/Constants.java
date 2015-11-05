@@ -21,5 +21,7 @@ public final class Constants
             ".RESULT_DATA_KEY";
     public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME +
             ".LOCATION_DATA_EXTRA";
-    public static final String DATABASE_URL = "http://74.67.2.186:3000/api/Reviews";
+    public static final String SEARCH_DIST_URL = "http://74.67.2.186:3000/api/Locations/byDistance?";
+    public static final String SEARCH_RATE_URL = "http://74.67.2.186:3000/api/Locations/byRating?";
+    public static final String SEARCH_WT_URL = "http://74.67.2.186:3000/api/Locations/byWait?";
 }
