@@ -129,6 +129,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.C
 
     protected void runSearchIntent(int search_code)
     {
+        //setups intent for searches with user's lat, long and search type
         Intent search_intent = new Intent(this, SearchActivity.class);
         search_intent.putExtra("LATITUDE_LOCATION", latit);
         search_intent.putExtra("LONGITUDE_LOCATION", longit);

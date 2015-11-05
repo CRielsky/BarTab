@@ -47,6 +47,7 @@ public class SearchActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        //Get information from Home screen intent
         Intent intent = getIntent();
         user_lat = intent.getDoubleExtra("LATITUDE_LOCATION", user_lat);
         user_long = intent.getDoubleExtra("LONGITUDE_LOCATION", user_long);
@@ -55,12 +56,14 @@ public class SearchActivity extends ListActivity {
         user_lat_str = String.valueOf(user_lat);
         user_long_str = String.valueOf(user_long);
 
+        //Call thread to query database
         FetchSearchData searchResults = new FetchSearchData();
         searchResults.execute();
         getListView().setAdapter(mSearchAdapter);
 
     }
 
+    //Class for querying database and parsing the result returned
     public class FetchSearchData extends AsyncTask<String, Void, String[]>
     {
         @Override
@@ -72,8 +75,8 @@ public class SearchActivity extends ListActivity {
 
             try
             {
+                //build query based off search type
                 Uri built_uri;
-
                 if( sc == 0 )
                 {
                     built_uri = distanceRequest();
@@ -88,6 +91,7 @@ public class SearchActivity extends ListActivity {
                 }
                 URL url = new URL(built_uri.toString());
 
+                //setup url connection and establish request type
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
@@ -117,7 +121,7 @@ public class SearchActivity extends ListActivity {
             catch(IOException e)
             {
                 Log.e(LOG_TAG, "Error ", e);
-                // If the code didn't successfully get the weather data, there's no point in attemping
+                // If the code didn't successfully get the search data, there's no point in attemping
                 // to parse it.
                 return null;
             }
@@ -165,12 +169,14 @@ public class SearchActivity extends ListActivity {
             String[] resultStrs = new String[searchArray.length()];
             for(int i = 0; i < searchArray.length(); i++)
             {
+                //extract relevant JSON information
                 String loc_name = searchArray.getJSONObject(i).getString(OWM_NAME);
                 double latit = searchArray.getJSONObject(i).getDouble(OWM_LATITUDE);
                 double longit = searchArray.getJSONObject(i).getDouble(OWM_LONGITUDE);
                 int avg_wt = searchArray.getJSONObject(i).getInt(OWM_WAITTIME);
                 int avg_at = searchArray.getJSONObject(i).getInt(OWM_ATMOSPHERE);
 
+                //format list view entries for search results pages
                 if( sc == 0 )
                 {
                     float dist = searchArray.getJSONObject(i).getLong(OWM_DISTANCE);
@@ -230,13 +236,6 @@ public class SearchActivity extends ListActivity {
         {
             if (result != null)
             {
-                for(int i = 0; i < 4; i++)
-                {
-                    if(result[i].equals(null))
-                    {
-                        System.out.println("fuck this shit");
-                    }
-                }
                 for(String resultlet : result)
                 {
                     mSearchAdapter.add(resultlet);
