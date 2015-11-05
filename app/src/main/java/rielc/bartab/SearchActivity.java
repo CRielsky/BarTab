@@ -57,6 +57,7 @@ public class SearchActivity extends ListActivity {
         user_long_str = String.valueOf(user_long);
 
         //Call thread to query database
+        mSearchAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
         FetchSearchData searchResults = new FetchSearchData();
         searchResults.execute();
         getListView().setAdapter(mSearchAdapter);
