@@ -180,8 +180,10 @@ public class SearchActivity extends ListActivity {
                 //format list view entries for search results pages
                 if( sc == 0 )
                 {
-                    float dist = searchArray.getJSONObject(i).getLong(OWM_DISTANCE);
-                    String add_str = loc_name + "\t\t" + Float.toString(dist) + " miles";
+                    double dist = searchArray.getJSONObject(i).getDouble(OWM_DISTANCE);
+                    dist = Math.round(dist * 100);
+                    dist = dist/100;
+                    String add_str = loc_name + "\t\t" + Double.toString(dist) + " miles";
                     resultStrs[i] = add_str;
                 }
                 else if( sc == 1 )
