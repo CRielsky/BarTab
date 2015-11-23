@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context="rielc.bartab.ReviewActivity"
-    android:background="#aa662b">
+    android:background="#2196F3">
 
     <include layout="@layout/content_review" />
 
