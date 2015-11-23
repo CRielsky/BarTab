@@ -95,6 +95,7 @@ public class ReviewActivity extends AppCompatActivity {
             }
         });
 
+        //wait until a rating and waiting time has been selected and then post the review
         Button submit_rev = (Button) findViewById(R.id.submit);
         submit_rev.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,6 +120,7 @@ public class ReviewActivity extends AppCompatActivity {
             JSONObject review = createJSONObj();
 
             try {
+                //build url connection
                 URL url = new URL(Constants.POST_REVIEW_URL);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoInput(true);
@@ -130,6 +132,7 @@ public class ReviewActivity extends AppCompatActivity {
                 urlConnection.setRequestProperty("Host", "69.204.137.215:3000");
                 urlConnection.connect();
 
+                //change json object to bytes
                 byte[] data = review.toString().getBytes("UTF-8");
                 printout = urlConnection.getOutputStream();
                 printout.write(data);
@@ -160,6 +163,7 @@ public class ReviewActivity extends AppCompatActivity {
         protected JSONObject createJSONObj() {
             JSONObject new_review = new JSONObject();
             try{
+                //create json object with review parameters
                 new_review.put("user", username);
                 new_review.put("location_name", address);
                 new_review.put("latitude", latit);
