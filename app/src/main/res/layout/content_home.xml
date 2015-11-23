@@ -7,7 +7,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_home" tools:context="rielc.bartab.HomeActivity">
+    tools:showIn="@layout/activity_home" tools:context="rielc.bartab.HomeActivity"
+    android:background="#F44336">
 
     <Button
         android:text="Search By Distance"
@@ -17,7 +18,8 @@
         android:textSize="25dp"
         android:layout_above="@+id/search_rate"
         android:layout_centerHorizontal="true"
-        android:background="#ce5e2d" />
+        android:background="#D32F2F"
+        android:padding="10dp" />
 
     <Button
         android:text="Search By Rating"
@@ -27,7 +29,8 @@
         android:textSize="25dp"
         android:layout_above="@+id/search_wt"
         android:layout_centerHorizontal="true"
-        android:background="#ce5e2d" />
+        android:background="#D32F2F"
+        android:padding="10dp" />
 
     <Button
         android:text="Search By Wait Time"
@@ -38,7 +41,8 @@
         android:layout_centerVertical="true"
         android:layout_alignRight="@+id/search_dist"
         android:layout_alignEnd="@+id/search_dist"
-        android:background="#ce5e2d" />
+        android:background="#D32F2F"
+        android:padding="10dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -48,7 +52,8 @@
         android:textSize="25dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="#ce5e2d" />
+        android:background="#D32F2F"
+        android:padding="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
