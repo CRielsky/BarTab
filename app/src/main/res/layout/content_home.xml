@@ -37,4 +37,14 @@
         android:layout_alignRight="@+id/search_dist"
         android:layout_alignEnd="@+id/search_dist" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SUBMIT REVIEW"
+        android:id="@+id/submit_review"
+        android:textSize="25dp"
+        android:layout_below="@+id/search_wt"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp" />
+
 </RelativeLayout>

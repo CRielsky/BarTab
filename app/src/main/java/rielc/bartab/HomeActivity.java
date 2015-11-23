@@ -1,6 +1,7 @@
 package rielc.bartab;
 
 import android.database.CursorJoiner;
+import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,51 +22,37 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 
 public class HomeActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener{
+        GoogleApiClient.OnConnectionFailedListener {
 
-    private TextView mAddress;
+    private String mAddress = "Conner's House";
     private double latit, longit;
     private Boolean mAddressRequested = true;
     private int search_code;
     private boolean googleConnected = false;
+    private String username;
 
     protected Location mLastLocation;
 
     private GoogleApiClient mGoogleApiClient;
-    private AddressResultReceiver mResultReceiver;
-
-    //Handles the results returned by the service
-    class AddressResultReceiver extends ResultReceiver{
-        public AddressResultReceiver(Handler handler)
-        {
-            super(handler);
-        }
-
-        protected void onReceiveResult(int resultCode, Bundle resultData)
-        {
-            //Sets the address string with either the result or error message
-           mAddress.setText(resultData.getString(Constants.RESULT_DATA_KEY));
-            if(resultCode == Constants.SUCCESS_RESULT)
-            {
-                showToast(getString(R.string.address_found));
-            }
-        }
-
-
-    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        Intent intent = getIntent();
+        username = intent.getStringExtra("USER_NAME");
 
         //Establishes buttons for searches
-        Button search_dist = (Button)findViewById(R.id.search_dist);
-        Button search_rate = (Button)findViewById(R.id.search_rate);
-        Button search_wt = (Button)findViewById(R.id.search_wt);
+        Button search_dist = (Button) findViewById(R.id.search_dist);
+        Button search_rate = (Button) findViewById(R.id.search_rate);
+        Button search_wt = (Button) findViewById(R.id.search_wt);
+        Button submit_rev = (Button) findViewById(R.id.submit_review);
 
         showToast("Getting your location...");
         //Try to connect to Google API
@@ -76,19 +63,17 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.C
         search_rate.setVisibility(View.VISIBLE);
         search_wt.setVisibility(View.VISIBLE);
 
+        mAddress = "Conner's House";
+
         //Wait for buttons to be clicked to initialize search
         search_dist.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                if( latit != 0.0d && longit != 0.0d )
-                {
+            public void onClick(View v) {
+                if (latit != 0.0d && longit != 0.0d) {
                     search_code = 0;
                     runSearchIntent(search_code);
 
-                }
-                else
-                {
+                } else {
                     showToast("Waiting to get your location...");
                 }
             }
@@ -96,15 +81,11 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.C
 
         search_rate.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                if( latit != 0.0d && longit != 0.0d )
-                {
+            public void onClick(View v) {
+                if (latit != 0.0d && longit != 0.0d) {
                     search_code = 1;
                     runSearchIntent(search_code);
-                }
-                else
-                {
+                } else {
                     showToast("Waiting to get your location...");
                 }
             }
@@ -112,28 +93,45 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.C
 
         search_wt.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                if( latit != 0.0d && longit != 0.0d )
-                {
+            public void onClick(View v) {
+                if (latit != 0.0d && longit != 0.0d) {
                     search_code = 2;
                     runSearchIntent(search_code);
-                }
-                else
-                {
+                } else {
                     showToast("Waiting to get your location...");
+                }
+            }
+        });
+
+        submit_rev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mAddress == null){
+                    showToast("Sorry, cannot find address at this time.");
+                }
+                else {
+                    runReviewIntent();
                 }
             }
         });
     }
 
-    protected void runSearchIntent(int search_code)
-    {
+    protected void runSearchIntent(int search_code) {
+        //setups intent for searches with user's lat, long and search type
         Intent search_intent = new Intent(this, SearchActivity.class);
         search_intent.putExtra("LATITUDE_LOCATION", latit);
         search_intent.putExtra("LONGITUDE_LOCATION", longit);
         search_intent.putExtra("SEARCH_TYPE", search_code);
         startActivity(search_intent);
+    }
+
+    protected void runReviewIntent(){
+        Intent review_intent = new Intent(this, ReviewActivity.class);
+        review_intent.putExtra("LATITUDE_LOCATION", latit);
+        review_intent.putExtra("LONGITUDE_LOCATION", longit);
+        review_intent.putExtra("USER_ADDRESS", mAddress);
+        review_intent.putExtra("USER_NAME", username);
+        startActivity(review_intent);
     }
 
 
@@ -147,20 +145,19 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.C
         {
             latit = mLastLocation.getLatitude();
             longit = mLastLocation.getLongitude();
+            Geocoder geocoder;
+            List<Address> addresses;
+            geocoder = new Geocoder(this, Locale.getDefault());
 
+            try {
+                addresses = geocoder.getFromLocation(latit, longit, 1);
+                mAddress = addresses.get(0).getFeatureName();
+            }
+            catch(IOException io) {
 
-            /*
-            if(!Geocoder.isPresent())
-            {
-                showToast(getString(R.string.no_geocoder_found));
-                return;
             }
 
-            if(mAddressRequested)
-            {
-                startIntentService();
-            }
-            */
+
         }
 
 
@@ -189,16 +186,6 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.C
                 .build();
 
         mGoogleApiClient.connect();
-    }
-
-    //Starts addressing intent service with information from the last known location
-    protected void startIntentService()
-    {
-        Intent intent = new Intent(this, FetchAddressIntentService.class);
-        intent.putExtra(Constants.RECEIVER, mResultReceiver);
-        intent.putExtra(Constants.LOCATION_DATA_EXTRA, mLastLocation);
-        startService(intent);
-
     }
 
     //Generic function for toasting messages to the UI

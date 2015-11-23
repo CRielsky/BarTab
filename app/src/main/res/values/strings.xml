@@ -5,8 +5,9 @@
     <string name="title_activity_home">HomeActivity</string>
     <string name="service_not_available">Google Location Services is not available.</string>
     <string name="invalid_lat_long_used">An invalid latitude or longitude has been entered.</string>
-    <string name="no_address_found">No address was found for the latitude and longitude.</string>
+    <string name="no_address_found">Null Address.</string>
     <string name="address_found">An address has been found.</string>
     <string name="no_geocoder_found">No geocoder has been initialized.</string>
     <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_review">ReviewActivity</string>
 </resources>
