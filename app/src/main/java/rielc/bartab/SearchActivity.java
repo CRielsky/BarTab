@@ -122,7 +122,7 @@ public class SearchActivity extends ListActivity {
             catch(IOException e)
             {
                 Log.e(LOG_TAG, "Error ", e);
-                // If the code didn't successfully get the search data, there's no point in attemping
+                // If the code didn't successfully get the search data, there's no point in attempting
                 // to parse it.
                 return null;
             }
