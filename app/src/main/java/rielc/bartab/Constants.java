@@ -1,11 +1,7 @@
 package rielc.bartab;
-
 /**
- * Created by Conner on 10/21/2015.
- *
  * Class to hold all constants needed
  * for the project.
- *
  */
 public final class Constants
 {

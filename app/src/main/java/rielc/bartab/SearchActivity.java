@@ -34,10 +34,10 @@ import java.util.ArrayList;
 public class SearchActivity extends ListActivity {
 
     private final static String LOG_TAG = "SearchActivity";
-    private double user_lat, user_long;
-    private String user_lat_str;
-    private String user_long_str;
-    private String mile_length = "5";
+    private double userLat, userLong;
+    private String userLatStr;
+    private String userLongStr;
+    private String mileLength = "5";
     private int sc;
     private ArrayAdapter<String> mSearchAdapter;
 
@@ -49,12 +49,13 @@ public class SearchActivity extends ListActivity {
 
         //Get information from Home screen intent
         Intent intent = getIntent();
-        user_lat = intent.getDoubleExtra("LATITUDE_LOCATION", user_lat);
-        user_long = intent.getDoubleExtra("LONGITUDE_LOCATION", user_long);
+        userLat = intent.getDoubleExtra("LATITUDE_LOCATION", userLat);
+        userLong = intent.getDoubleExtra("LONGITUDE_LOCATION", userLong);
         sc = intent.getIntExtra("SEARCH_TYPE", sc);
 
-        user_lat_str = String.valueOf(user_lat);
-        user_long_str = String.valueOf(user_long);
+        //Convert lat and long to strings
+        userLatStr = String.valueOf(userLat);
+        userLongStr = String.valueOf(userLong);
 
         //Call thread to query database
         mSearchAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
@@ -65,32 +66,26 @@ public class SearchActivity extends ListActivity {
     }
 
     //Class for querying database and parsing the result returned
-    public class FetchSearchData extends AsyncTask<String, Void, String[]>
-    {
+    public class FetchSearchData extends AsyncTask<String, Void, String[]> {
         @Override
-        protected String[] doInBackground(String... params)
-        {
+        protected String[] doInBackground(String... params) {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
             String searchJsonStr = null;
 
-            try
-            {
+            try {
                 //build query based off search type
-                Uri built_uri;
-                if( sc == 0 )
-                {
-                    built_uri = distanceRequest();
+                Uri builtUri;
+                if( sc == 0 ) {
+                    builtUri = distanceRequest();
                 }
-                else if( sc == 1 )
-                {
-                    built_uri = ratingRequest();
+                else if( sc == 1 ) {
+                    builtUri = ratingRequest();
                 }
-                else
-                {
-                    built_uri = waitTimeRequest();
+                else {
+                    builtUri = waitTimeRequest();
                 }
-                URL url = new URL(built_uri.toString());
+                URL url = new URL(builtUri.toString());
 
                 //setup url connection and establish request type
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -119,16 +114,15 @@ public class SearchActivity extends ListActivity {
                 }
                 searchJsonStr = buffer.toString();
             }
-            catch(IOException e)
-            {
+            catch(IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
                 // If the code didn't successfully get the search data, there's no point in attempting
                 // to parse it.
                 return null;
             }
-            finally
-            {
+            finally {
                 if (urlConnection != null) {
+                    //disconnect connection at the end
                     urlConnection.disconnect();
                 }
                 if (reader != null) {
@@ -145,16 +139,12 @@ public class SearchActivity extends ListActivity {
                 Log.e(LOG_TAG, e.getMessage(), e);
                 e.printStackTrace();
             }
-
-            // This will only happen if there was an error getting or parsing the forecast.
-            System.out.println("Here");
             return null;
         }
 
 
         private String[] getSearchDataFromJson(String searchJsonStr)
-                throws JSONException
-        {
+                throws JSONException {
             // These are the names of the JSON objects that need to be extracted.
             final String OWM_LOCATIONS = "locations";
             final String OWM_NAME = "location_name";
@@ -168,8 +158,7 @@ public class SearchActivity extends ListActivity {
             JSONArray searchArray = searchJson.getJSONArray(OWM_LOCATIONS);
 
             String[] resultStrs = new String[searchArray.length()];
-            for(int i = 0; i < searchArray.length(); i++)
-            {
+            for(int i = 0; i < searchArray.length(); i++) {
                 //extract relevant JSON information
                 String loc_name = searchArray.getJSONObject(i).getString(OWM_NAME);
                 double latit = searchArray.getJSONObject(i).getDouble(OWM_LATITUDE);
@@ -178,73 +167,66 @@ public class SearchActivity extends ListActivity {
                 int avg_at = searchArray.getJSONObject(i).getInt(OWM_ATMOSPHERE);
 
                 //format list view entries for search results pages
-                if( sc == 0 )
-                {
+                if( sc == 0 ) {
                     double dist = searchArray.getJSONObject(i).getDouble(OWM_DISTANCE);
                     dist = Math.round(dist * 100);
                     dist = dist/100;
                     String add_str = loc_name + "\t\t" + Double.toString(dist) + " miles";
                     resultStrs[i] = add_str;
                 }
-                else if( sc == 1 )
-                {
+                else if( sc == 1 ) {
                     String add_str = loc_name + "\t\t" + Integer.toString(avg_at) + "/5";
                     resultStrs[i] = add_str;
                 }
-                else if( sc == 2 )
-                {
+                else if( sc == 2 ) {
                     String add_str = loc_name + "\t\t" + Integer.toString(avg_wt) + " minutes";
                     resultStrs[i] = add_str;
                 }
-                else
-                {
+                else {
                     resultStrs[i] = "  ";
                 }
             }
             return resultStrs;
         }
 
-        protected Uri distanceRequest()
-        {
-            Uri built_uri = Uri.parse(Constants.SEARCH_DIST_URL).buildUpon()
-                    .appendQueryParameter("lat", user_lat_str)
-                    .appendQueryParameter("lon",user_long_str)
-                    .appendQueryParameter("len", mile_length)
+        protected Uri distanceRequest() {
+            //custom uri for distance
+            Uri builtUri = Uri.parse(Constants.SEARCH_DIST_URL).buildUpon()
+                    .appendQueryParameter("lat", userLatStr)
+                    .appendQueryParameter("lon",userLongStr)
+                    .appendQueryParameter("len", mileLength)
                     .build();
-            return built_uri;
+            return builtUri;
         }
 
-        protected Uri ratingRequest()
-        {
-            Uri built_uri = Uri.parse(Constants.SEARCH_RATE_URL).buildUpon()
-                    .appendQueryParameter("lat", user_lat_str)
-                    .appendQueryParameter("lon", user_long_str)
-                    .appendQueryParameter("len", mile_length)
+        protected Uri ratingRequest() {
+            //custom uri for rating
+            Uri builtUri = Uri.parse(Constants.SEARCH_RATE_URL).buildUpon()
+                    .appendQueryParameter("lat", userLatStr)
+                    .appendQueryParameter("lon", userLongStr)
+                    .appendQueryParameter("len", mileLength)
                     .build();
-            return built_uri;
+            return builtUri;
         }
 
-        protected Uri waitTimeRequest()
-        {
-            Uri built_uri = Uri.parse(Constants.SEARCH_WT_URL).buildUpon()
-                    .appendQueryParameter("lat", user_lat_str)
-                    .appendQueryParameter("lon", user_long_str)
-                    .appendQueryParameter("len", mile_length)
+        protected Uri waitTimeRequest() {
+            //custom uri for wait time
+            Uri builtUri = Uri.parse(Constants.SEARCH_WT_URL).buildUpon()
+                    .appendQueryParameter("lat", userLatStr)
+                    .appendQueryParameter("lon", userLongStr)
+                    .appendQueryParameter("len", mileLength)
                     .build();
-            return built_uri;
+            return builtUri;
         }
 
         @Override
-        protected void onPostExecute(String[] result)
-        {
-            if (result != null)
-            {
-                for(String resultlet : result)
-                {
+        protected void onPostExecute(String[] result) {
+            //add results to list that is displayed to the user
+            if (result != null) {
+                for(String resultlet : result) {
                     mSearchAdapter.add(resultlet);
                 }
             }
         }
-
     }
 }

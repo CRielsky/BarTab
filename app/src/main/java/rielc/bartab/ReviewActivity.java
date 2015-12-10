@@ -39,14 +39,13 @@ import java.net.URLEncoder;
 public class ReviewActivity extends AppCompatActivity {
 
     private double latit, longit;
-    private int wait_time, rating;
+    private int waitTime, rating;
     private String address, username;
-    private boolean wt_fin = false;
-    private boolean rt_fin = false;
+    private boolean wtFin = false;
+    private boolean rtFin = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review);
 
@@ -67,8 +66,8 @@ public class ReviewActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //on a time selected, set the wait time variable
-                wait_time = Integer.parseInt(items_wt[position]);
-                wt_fin = true;
+                waitTime = Integer.parseInt(items_wt[position]);
+                wtFin = true;
             }
 
             @Override
@@ -77,6 +76,8 @@ public class ReviewActivity extends AppCompatActivity {
             }
         });
 
+        //create a drop down menu for restaurant ratings
+        //allow ratings from 1 to 5 "stars"
         Spinner dropdown_rt = (Spinner)findViewById(R.id.rt_drop);
         final String[] items_rt = new String[]{"1", "2", "3", "4", "5"};
         ArrayAdapter<String> adapter_rt = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items_rt);
@@ -86,7 +87,7 @@ public class ReviewActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //on a rating selected, set the rating variable
                 rating = Integer.parseInt(items_rt[position]);
-                rt_fin = true;
+                rtFin = true;
             }
 
             @Override
@@ -100,7 +101,7 @@ public class ReviewActivity extends AppCompatActivity {
         submit_rev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if( rt_fin && wt_fin ){
+                if(rtFin && wtFin ){
                     PostReview rev = new PostReview();
                     rev.execute();
                 }
@@ -111,9 +112,9 @@ public class ReviewActivity extends AppCompatActivity {
         });
     }
 
+    //class to run separate thread to PUT review
     class PostReview extends AsyncTask<Void, Void, String> {
-        protected String doInBackground(Void... voids)
-        {
+        protected String doInBackground(Void... voids) {
             int response = 0;
             HttpURLConnection urlConnection = null;
             OutputStream printout;
@@ -149,10 +150,12 @@ public class ReviewActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             finally{
+                //disconnect the connection at the end
                 urlConnection.disconnect();
             }
 
             if( response == 200 ) {
+                //if good response code, return this message
                 return "Review was submitted successfully!";
             }
             else{
@@ -161,24 +164,24 @@ public class ReviewActivity extends AppCompatActivity {
         }
 
         protected JSONObject createJSONObj() {
-            JSONObject new_review = new JSONObject();
+            JSONObject newReview = new JSONObject();
             try{
                 //create json object with review parameters
-                new_review.put("user", username);
-                new_review.put("location_name", address);
-                new_review.put("latitude", latit);
-                new_review.put("longitude", longit);
-                new_review.put("wait_time", wait_time);
-                new_review.put("atmosphere", rating);
+                newReview.put("user", username);
+                newReview.put("location_name", address);
+                newReview.put("latitude", latit);
+                newReview.put("longitude", longit);
+                newReview.put("wait_time", waitTime);
+                newReview.put("atmosphere", rating);
             }
             catch(JSONException e) {
                 e.printStackTrace();
             }
-            return new_review;
+            return newReview;
         }
 
-        protected void onPostExecute(String msg)
-        {
+        protected void onPostExecute(String msg) {
+            //alert user to the result of the review posting
             Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
         }
     }

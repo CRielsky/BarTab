@@ -21,7 +21,6 @@ import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 
-//Conner's branch
 public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener{
@@ -38,8 +37,7 @@ public class LoginActivity extends AppCompatActivity implements
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_main);
 
@@ -52,7 +50,7 @@ public class LoginActivity extends AppCompatActivity implements
                 .addScope(Plus.SCOPE_PLUS_PROFILE)
                 .build();
 
-        //log in button
+        //get login button and wait for click
         SignInButton sign_in = (SignInButton)findViewById(R.id.sign_in_button);
         sign_in.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,15 +63,15 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     @Override
-    protected void onStart()
-    {
+    protected void onStart() {
+        //on Activity start attempt to connect to Google API
         super.onStart();
         mGoogleApiClient.connect();
     }
 
     @Override
-    protected void onStop()
-    {
+    protected void onStop() {
+        //on Activity stop disconnect from Google API
         super.onStop();
         mGoogleApiClient.disconnect();
     }
@@ -92,6 +90,7 @@ public class LoginActivity extends AppCompatActivity implements
             String personName = currentPerson.getDisplayName();
             String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
 
+            //if Google API is connected: send relevant info and start HomeActivity
             Intent intent = new Intent(this, HomeActivity.class);
             intent.putExtra("USER_NAME", personName);
             intent.putExtra("USER_EMAIL", email);
@@ -101,8 +100,7 @@ public class LoginActivity extends AppCompatActivity implements
 
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult)
-    {
+    public void onConnectionFailed(ConnectionResult connectionResult) {
         // Could not connect to Google Play Services.  The user needs to select an account,
         // grant permissions or resolve an error in order to sign in. Refer to the javadoc for
         // ConnectionResult to see possible error codes.
@@ -123,8 +121,7 @@ public class LoginActivity extends AppCompatActivity implements
                 showErrorDialog(connectionResult);
             }
         } else {
-            // Show the signed-out UI
-            //showSignedOutUI();
+
         }
     }
 
@@ -135,8 +132,8 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //based off the sign in result, attempt to connect to the Google API
         super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "onActivityResult:" + requestCode + ":" + resultCode + ":" + data);
 
@@ -153,13 +150,11 @@ public class LoginActivity extends AppCompatActivity implements
 
 
     @Override
-    public void onClick(View v)
-    {
-
+    public void onClick(View v) {
+        //nothing needed here
     }
 
-    private void onSignInClicked()
-    {
+    private void onSignInClicked() {
         // User clicked the sign-in button, so begin the sign-in process and automatically
         // attempt to resolve any errors that occur.
         mShouldResolve = true;
@@ -167,8 +162,7 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
 
-    private void showErrorDialog(ConnectionResult connectionResult)
-    {
+    private void showErrorDialog(ConnectionResult connectionResult) {
         //TODO: Show error dialog to show users the connection error
     }
 
@@ -190,7 +184,6 @@ public class LoginActivity extends AppCompatActivity implements
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }
